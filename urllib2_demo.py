@@ -3,15 +3,10 @@ import urllib2
 import urllib
 import cookielib
 
-
 def urlopen():
-    # 普通请求
-    s = urllib2.urlopen('http://blog.kamidox.com')
-    print(s.read(100))
-    s.close()
-    # 超时请求以及错误处理
+    url = 'http://blog.kamidox.com/no-exist'
     try:
-        s = urllib2.urlopen('http://blog.kamidox.com/not-exist', timeout=1)
+        s = urllib2.urlopen(url, timeout=3)
     except urllib2.HTTPError, e:
         print(e)
     else:
@@ -25,7 +20,9 @@ def request():
     req = urllib2.Request('http://blog.kamidox.com', headers=headers)
     s = urllib2.urlopen(req)
     print(s.read(100))
+    print(req.headers)
     s.close()
+
 
 def request_post_debug():
     # POST
@@ -39,16 +36,18 @@ def request_post_debug():
     s.close()
 
 
-def install_debug_opener():
-    opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=1), urllib2.HTTPSHandler(debuglevel=1))
+def install_debug_handler():
+    opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=1),
+                                  urllib2.HTTPSHandler(debuglevel=1))
     urllib2.install_opener(opener)
 
 
-def handle_cookies():
+def handle_cookie():
     cookiejar = cookielib.CookieJar()
-    cookie_handler = urllib2.HTTPCookieProcessor(cookiejar=cookiejar)
-    opener = urllib2.build_opener(cookie_handler, urllib2.HTTPHandler(debuglevel=1))
+    handler = urllib2.HTTPCookieProcessor(cookiejar=cookiejar)
+    opener = urllib2.build_opener(handler, urllib2.HTTPHandler(debuglevel=1))
     s = opener.open('http://www.douban.com')
+    print(s.read(100))
     s.close()
 
     print('=' * 80)
@@ -58,9 +57,6 @@ def handle_cookies():
     s = opener.open('http://www.douban.com')
     s.close()
 
+
 if __name__ == '__main__':
-    # install_debug_opener()
-    # urlopen()
-    # request()
-    # request_post_debug()
-    handle_cookies()
+    handle_cookie()
