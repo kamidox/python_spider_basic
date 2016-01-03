@@ -24,9 +24,14 @@ def get_custom_headers():
 
 
 def get_cookie():
-    r = requests.get('http://www.douban.com')
+    headers = {'User-Agent': 'Chrome'}
+    url = 'http://www.douban.com'
+    r = requests.get(url, headers=headers)
     print(r.status_code)
-    print(r.cookies.items())
+    print(r.cookies)
+    requests.get(url, headers=headers)
+    print(r.status_code)
+    print(r.cookies)
 
 
 def post():
@@ -39,6 +44,6 @@ def post():
 if __name__ == '__main__':
     # get_json()
     # get_querystring()
-    get_custom_headers()
-    # get_cookie()
+    # get_custom_headers()
+    get_cookie()
     # post()
