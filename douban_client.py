@@ -11,6 +11,7 @@ class DoubanClient(object):
         self.session = requests.session()
         self.session.headers.update(headers)
 
+
     def login(self, username, password,
               source='index_nav',
               redir='http://www.douban.com/',
@@ -22,14 +23,16 @@ class DoubanClient(object):
         if captcha_id:
             captcha_solution = raw_input('please input solution for captcha [%s]:' % captcha_url)
         url = 'https://www.douban.com/accounts/login'
-        data = {'form_email': username, 'form_password': password, 'source': source}
+        data = {'form_email': username,
+                'form_password': password,
+                'source': source,
+                'redir': redir,
+                'login': login}
         headers = {'referer': 'http://www.douban.com/accounts/login?source=main',
                    'host': 'accounts.douban.com'}
         if captcha_id:
             data['captcha-id'] = captcha_id
             data['captcha-solution'] = captcha_solution
-            data['redir'] = redir
-            data['login'] = login
         self.session.post(url, data=data, headers=headers)
         print(self.session.cookies.items())
 
