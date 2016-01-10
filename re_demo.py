@@ -92,6 +92,45 @@ def re_pattern_syntax():
 
     # {m}
     print(re.match(r'ab{2}', 'abb').group())
+    # {m,n}/{m,}
+    print(re.match(r'ab{2,4}', 'abbbbbb').group())
+    print(re.match(r'ab{2,5}', 'ab'))
+    print(re.match(r'ab{2,}', 'abbbbbb').group())
+    # {m,n} non-greedy
+    print(re.match(r'ab{2,4}?', 'abbbbbb').group())
+
+    # 转义字符 \ 用来匹配特殊字符
+    print(re.search(r'\$(\d+\.\d+)', 'The price is $9.00').groups())
+
+    # [] 集合
+    print(re.search(r'0[xX]([0-9A-Fa-f]+)', 'The hex value is 0xFF03D6').groups())
+    print(re.search(r'[0-9]{3}-[0-9]{4}-[0-9]{4}', 'The Phone Number is 138-2231-2398').group())
+    print(re.search(r'[0-9\-]+', 'The Phone Number is 138-2231-2398').group())
+    # |
+    print(re.search(r'([0-9]|-)+', 'The Phone Number is 138-2231-2398').group())
+
+
+def re_pattern_syntax_meta_char():
+    # \number
+    print(re.search(r'(.+) \1', 'the the').group())
+    print(re.search(r'[0-9]{3}(-[0-9]{4})\1', 'The Phone Number is 138-2231-2398'))
+    print(re.search(r'[0-9]{3}(-[0-9]{4})\1', 'The Phone Number is 138-2231-2231').group())
+
+    # \A
+    print(re.match(r'\A[Nn]ame:', 'Name: Joey').group())
+    print(re.match(r'^[Nn]ame:', 'Name: Joey').group())
+
+    # \d\D
+    print(re.search(r'\d{3}-\d{4}-\d{4}', 'The Phone Number is 138-2231-2398').group())
+    print(re.search(r'(\D+)\d{3}-\d{4}-\d{4}', 'The Phone Number is 138-2231-2398').groups())
+
+    # \s\S: [ \t\n\r\f\v] \f: 换页 \v: 垂直制表
+    print(re.match(r'Name:\s+([a-zA-Z]+)', 'Name: \tJoey').groups())
+    print(re.match(r'\S+:\s*(\S+)', 'Name: Joey').groups())
+
+    # \w\W: [a-zA-Z0-9_]
+    print(re.match(r'(\w+)(\W+)(\w+)', 'Name: Joey').groups())
+
 
 if __name__ == '__main__':
-    re_pattern_syntax()
+    re_pattern_syntax_meta_char()
