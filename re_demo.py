@@ -132,5 +132,31 @@ def re_pattern_syntax_meta_char():
     print(re.match(r'(\w+)(\W+)(\w+)', 'Name: Joey').groups())
 
 
+def re_pattern_flags():
+    # re.DEBUG
+    print(re.match(r'(\w+)(\W+)(\w+)', 'Name: Joey', re.DEBUG).groups())
+
+    # re.I/re.IGNORECASE
+    print(re.match(r'(name)\W+(\w+)', 'Name: Joey'))
+    print(re.match(r'(name)\W+(\w+)', 'Name: Joey', re.IGNORECASE).groups())
+
+    # re.DOTALL
+    print(re.match(r'.*', 'abc\ndef').group())
+    print(re.match(r'.*', 'abc\ndef', re.DOTALL).group())
+
+    # re.VERBOSE
+    a = re.compile(r"""
+                   \d +  # the integral part
+                   \.    # the decimal point
+                   \d *  # some fractional digits""")
+    b = re.compile(r"""
+                   \d +  # the integral part
+                   \.    # the decimal point
+                   \d *  # some fractional digits""", re.VERBOSE)
+    c = re.compile(r"\d+\.\d*")
+    print(a.search('20.5'))
+    print(b.search('20.5').group())
+    print(c.search('20.5').group())
+
 if __name__ == '__main__':
-    re_pattern_syntax_meta_char()
+    re_pattern_flags()
