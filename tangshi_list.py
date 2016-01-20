@@ -18,6 +18,7 @@ class PoemParser(HTMLParser):
         self.in_a = False
         self.pattern = re.compile(r'(.*)\((.*)\)')
         self.tangshi_list = []
+        self.current_poem = {}
 
     def handle_starttag(self, tag, attrs):
         if tag == 'div' and _attr(attrs, 'class') == 'guwencont2':
@@ -25,6 +26,7 @@ class PoemParser(HTMLParser):
 
         if tag == 'a' and self.in_div:
             self.in_a = True
+            self.current_poem['url'] = _attr(attrs, 'href')
 
     def handle_endtag(self, tag):
         if tag == 'div':
@@ -37,7 +39,11 @@ class PoemParser(HTMLParser):
         if self.in_a:
             print(data)
             m = self.pattern.match(data)
-            if m: self.tangshi_list.append(m.groups())
+            if m:
+                self.current_poem['title'] = m.group(1)
+                self.current_poem['author'] = m.group(2)
+                self.tangshi_list.append(self.current_poem)
+                self.current_poem = {}
 
 
 def retrive_tangshi_300():
@@ -52,5 +58,5 @@ if __name__ == '__main__':
     l = retrive_tangshi_300()
     print('total %d poems.' % len(l))
     for i in range(10):
-        print('标题: %s\t作者：%s' % (l[i]))
+        print('标题: %(title)s\t作者：%(author)s\tURL: %(url)s' % (l[i]))
 
