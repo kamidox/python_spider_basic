@@ -84,6 +84,41 @@ def download_poem(poem):
     poem['content'] = '\n'.join(parser.content)
 
 
+def trim_ws(s):
+    c = re.sub(r'\s+', '', s)
+
+    def _add_crlf(m):
+        return m.group() + '\r\n'
+
+    c = re.sub(r'，|。', _add_crlf, c)
+    # c = c.replace('，', '，\n')
+    # c = c.replace('。', '。\n')
+    return c
+
+
+def trim_href(s):
+    s = s.replace('<br>', '')
+    alt = re.search(r'alt\s*=\s*\"?(.*?)\"?\s+', s, re.IGNORECASE)
+    s = re.sub(r'<a.*?</a>', alt.groups(1), s)
+    return trim_ws(s)
+
+
+def trim_test():
+    s = """月落乌啼霜满天，江枫渔火对愁眠。
+           姑苏城外
+           寒山
+           寺，夜半钟声到客船。"""
+    print(trim_ws(s))
+
+    s = """
+        凉风起天末，君子意如何。<br>
+        鸿雁几时到，江湖秋水多。<br>
+        文章憎命达，魑魅喜人过。<br>
+        应共冤魂语，投<a href="http://www.gushiwen.org/GuShiWen_148389ab4e.aspx"><img style="vertical-align:middle;" src="http://www.gushiwen.org/favicon.ico" alt="诗" title="诗" width="14" height="14"></a>
+        赠汨罗。"""
+    print(trim_href(s))
+
+
 if __name__ == '__main__':
     l = retrive_tangshi_300()
     print('total %d poems.' % len(l))
@@ -95,3 +130,4 @@ if __name__ == '__main__':
         print('#%d downloading poem from: %s' % (i, l[i]['url']))
         download_poem(l[i])
         print('标题: %(title)s\t作者：%(author)s\n%(content)s' % (l[i]))
+    trim_test()
