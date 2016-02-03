@@ -15,6 +15,8 @@ def _download_image(url, folder):
 
 
 def download_wallpaper():
+    # 数据分析
+    # http://image.baidu.com/channel/wallpaper#%E7%83%AD%E9%97%A8%E6%8E%A8%E8%8D%90&%E5%85%A8%E9%83%A8&6&0
     url = 'http://image.baidu.com/data/imgs'
     params = {
         'pn': 41,
