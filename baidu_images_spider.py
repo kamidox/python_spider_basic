@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-__author__ = 'kamidox@qq.com'
-
+import requests
 import urllib
-import re
 import os
 
 
@@ -16,17 +14,33 @@ def _download_image(url, folder):
     return _filename(url)
 
 
-def main():
-    # http://image.baidu.com/channel?c=摄影&t=风景&s=1
-    url = 'http://image.baidu.com/channel?c=%E6%91%84%E5%BD%B1&t=%E9%A3%8E%E6%99%AF&s=1'
-    s = urllib.urlopen(url)
-    data = s.read()
+def download_wallpaper():
+    url = 'http://image.baidu.com/data/imgs'
+    params = {
+        'pn': 41,
+        'rn': 100,
+        'col': '壁纸',
+        'tag': '国家地理',
+        'tag3': '',
+        'width': 1600,
+        'height': 900,
+        'ic': 0,
+        'ie': 'utf8',
+        'oe': 'utf-8',
+        'image_id': '',
+        'fr': 'channel',
+        'p': 'channel',
+        'from': 1,
+        'app': 'img.browse.channel.wallpaper',
+        't': '0.016929891658946872'
+    }
+    s = requests.get(url, params=params)
+    imgs = s.json()['imgs']
+    print('totally %d images to download' % len(imgs))
+    for i in imgs:
+        if 'downloadUrl' in i:
+            _download_image(i['downloadUrl'], 'wallpaper')
 
-    re_imgs = re.compile(r'.*?"imageUrl"\s*:\s*"(http://.*?)"')
-    img_urls = re.findall(re_imgs, data)
-
-    for r in img_urls:
-        _download_image(r, 'images')
 
 if __name__ == '__main__':
-    main()
+    download_wallpaper()
